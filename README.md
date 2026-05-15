@@ -36,11 +36,77 @@ Step 5: **Security Foundation
 The security of RSA relies on the difficulty of factoring large numbers; thus, choosing sufficiently large prime numbers for \( p \) and \( q \) is crucial for security.
 
 ## Program:
+```
+#include <stdio.h>
 
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+int modInverse(int e, int phi) {
+    int d = 1;
+    while ((d * e) % phi != 1) {
+        d++;
+    }
+    return d;
+}
+
+long long power(long long base, long long exp, long long mod) {
+    long long result = 1;
+    while (exp > 0) {
+        result = (result * base) % mod;
+        exp--;
+    }
+    return result;
+}
+
+int main() {
+    int p, q, n, phi, e, d;
+    int msg;
+    long long encrypted, decrypted;
+
+    printf("Enter first prime number: ");
+    scanf("%d", &p);
+
+    printf("Enter second prime number: ");
+    scanf("%d", &q);
+
+    n = p * q;
+    phi = (p - 1) * (q - 1);
+
+    for (e = 2; e < phi; e++) {
+        if (gcd(e, phi) == 1) {
+            break;
+        }
+    }
+
+    d = modInverse(e, phi);
+
+    printf("Public Key (e, n) = (%d, %d)\n", e, n);
+    printf("Private Key (d, n) = (%d, %d)\n", d, n);
+
+    printf("Enter message (number less than %d): ", n);
+    scanf("%d", &msg);
+
+    encrypted = power(msg, e, n);
+    printf("Encrypted Message = %lld\n", encrypted);
+
+    decrypted = power(encrypted, d, n);
+    printf("Decrypted Message = %lld\n", decrypted);
+
+    return 0;
+}
+```
 
 
 
 ## Output:
+<img width="1522" height="696" alt="image" src="https://github.com/user-attachments/assets/6cb9d66f-dd64-4b38-917c-bf4a33566d1f" />
 
 
 
